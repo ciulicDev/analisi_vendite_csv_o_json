@@ -43,22 +43,41 @@ for riga in dati:
     else:
         totali_prodotti[prodotto] = totale_riga
 
+#Aggiunta di statistiche
+totale_complessivo = sum(totali_prodotti.values())
+
+statistiche = []
+
+for prodotto, totale in totali_prodotti.items():
+    media_prezzo = totale / sum(r["quantita"] for r in dati if r["prodotto"] == prodotto)
+    percentuale = totale / totale_complessivo
+    statistiche.append({
+        "prodotto": prodotto,
+        "totale": totale,
+        "media_prezzo": media_prezzo,
+        "percentuale": percentuale
+    })
+
 # report csv e json
 
 #csv
 
-with open("report.csv", "w", newline="") as f:
-    campi=["prodotto","totale"]
+# CSV
+with open("report_completo.csv", "w", newline="") as f:
+    campi = ["prodotto", "totale", "media_prezzo", "percentuale"]
     writer = csv.DictWriter(f, fieldnames=campi)
     writer.writeheader()
-    for prodotto,totale in totali_prodotti.items():
-        writer.writerow({"prodotto":prodotto, "totale":totale})
+    for s in statistiche:
+        writer.writerow({
+            "prodotto": s["prodotto"],
+            "totale": s["totale"],
+            "media_prezzo": f"{s['media_prezzo']:.2f}",
+            "percentuale": f"{s['percentuale']:.1%}"
+        })
 
-#json
-report_json = [{"prodotto": p, "totale": t} for p,t in totali_prodotti.items()]
-
-with open("report.json", "w") as f:
-    json.dump(report_json, indent=2)
+# JSON
+with open("report_completo.json", "w") as f:
+    json.dump(statistiche, f, indent=2)
 
 
 #stampare a terminale
