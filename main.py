@@ -81,6 +81,8 @@ with open("report_completo.json", "w") as f:
 
 
 #stampare a terminale
-print("Report generato!")
-for prodotto, totale in totali_prodotti.items():
-    print(f"{prodotto}: {totale:.2f}")
+print("Report completo generato!")
+for s in statistiche:
+    print(f"{s['prodotto']}: totale {s['totale']:.2f}, "
+          f"media prezzo {s['media_prezzo']:.2f}, "
+          f"percentuale {s['percentuale']:.1%}")
