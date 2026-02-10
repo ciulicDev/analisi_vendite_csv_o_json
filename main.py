@@ -30,6 +30,8 @@ elif filename.endswith(".json"):
 else:
     raise ValueError("Formato file non supportato")
 
+#calcolo del totale per ogni prodotto
+
 totali_prodotti = {}
 
 for riga in dati:
@@ -40,3 +42,26 @@ for riga in dati:
         totali_prodotti[prodotto] += totale_riga
     else:
         totali_prodotti[prodotto] = totale_riga
+
+# report csv e json
+
+#csv
+
+with open("report.csv", "w", newline="") as f:
+    campi=["prodotto","totale"]
+    writer = csv.DictWriter(f, fieldnames=campi)
+    writer.writeheader()
+    for prodotto,totale in totali_prodotti.items():
+        writer.writerow({"prodotto":prodotto, "totale":totale})
+
+#json
+report_json = [{"prodotto": p, "totale": t} for p,t in totali_prodotti.items()]
+
+with open("report.json", "w") as f:
+    json.dump(report_json, indent=2)
+
+
+#stampare a terminale
+print("Report generato!")
+for prodotto, totale in totali_prodotti.items():
+    print(f"{prodotto}: {totale:.2f}")
